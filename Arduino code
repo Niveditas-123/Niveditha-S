@@ -1,0 +1,50 @@
+//Develop the code in Arduino to interface an LM35 temperature sensor with an Arduino Uno and control the onboard LED
+
+//Used millis() function
+
+
+const int lm35Pin = A0; // Define the pin to which the LM35 temperature sensor is connected
+
+const int ledPin = 13; // Define the onboard LED pin
+
+// Variables to store temperature readings and blink intervals
+int temperature;
+int blinkInterval = 250;  // Initial blink interval for temperature below 30 degrees Celsius
+unsigned long previousMillis = 0;
+
+void setup() 
+{
+  pinMode(ledPin, OUTPUT); // Set the LED pin as an output
+  Serial.begin(9600); // Serial communication for debugging 
+}
+
+void loop() 
+{
+  int sensorValue = analogRead(lm35Pin); // Read the analog value from the LM35 sensor
+  temperature = (sensorValue * 500) / 1024;  // Convert the analog value to temperature in degrees Celsius
+
+  // Print temperature to serial monitor (optional)
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.println(" °C");
+
+  // Check the temperature and control the LED accordingly
+  if (temperature < 30)
+ {
+    // Blink every 250 milliseconds
+    if (millis() - previousMillis >= blinkInterval)
+ {
+      digitalWrite(ledPin, !digitalRead(ledPin));
+      previousMillis = millis();
+  }
+ }
+ else
+ {
+    // Blink every 500 milliseconds
+    if (millis() - previousMillis >= 500)
+   {
+      digitalWrite(ledPin, !digitalRead(ledPin));
+      previousMillis = millis();
+    }
+  }
+}
